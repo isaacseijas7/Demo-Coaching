@@ -2522,9 +2522,8 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
-  color: #fff;
-  background-color: transparent;
-  border-color: rgba(255,255,255,.5);
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,

@@ -1,7 +1,26 @@
 import React, { useState } from "react";
+
+const initialForm = {
+  firstName: "",
+  lasstName: "",
+  type: "Individual",
+  email: "",
+  phone: "",
+  subject: "",
+  description: "",
+};
+
 const SectionChooseYourCoach = ({ refProp }) => {
+  const [form, setForm] = useState({ ...initialForm });
+  const [sendingForm, setSendingForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectCoach, setSelectCoach] = useState(null);
+
+  const handlerChange = (event) => {
+    const { name, value } = event.target;
+    console.log(initialForm);
+    setForm({ ...form, [name]: value });
+  };
 
   const handleOpenModal = () => {
     document.querySelector("html").style.overflowY = "hidden";
@@ -11,11 +30,21 @@ const SectionChooseYourCoach = ({ refProp }) => {
   const handleCloseModal = () => {
     document.querySelector("html").style.overflowY = "auto";
     setShowModal(false);
+    setForm({ ...initialForm });
     setSelectCoach(null);
   };
 
   const createCoach = (title, image, text, post) => {
     return { title, image, text, post };
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSendingForm(true);
+    setTimeout(() => {
+      setSendingForm(false);
+      handleCloseModal();
+    }, 1000);
   };
 
   const coachs = [
@@ -77,7 +106,7 @@ const SectionChooseYourCoach = ({ refProp }) => {
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           {selectCoach && (
-            <form className="modal-content">
+            <form className="modal-content" onSubmit={handleSubmit}>
               <div className="modal-header">
                 <h5 className="modal-title">
                   <div className="title-flex">
@@ -108,6 +137,8 @@ const SectionChooseYourCoach = ({ refProp }) => {
                         type="text"
                         className="form-control"
                         name="firstName"
+                        onChange={handlerChange}
+                        value={form.firstName}
                         placeholder="Nombre"
                         aria-label="Nombre"
                       />
@@ -119,6 +150,8 @@ const SectionChooseYourCoach = ({ refProp }) => {
                         type="text"
                         className="form-control"
                         name="lasstName"
+                        onChange={handlerChange}
+                        value={form.lasstName}
                         placeholder="Apellido"
                       />
                     </div>
@@ -126,11 +159,13 @@ const SectionChooseYourCoach = ({ refProp }) => {
                   <div className="col-md-6 mb-3">
                     <div className="input-group">
                       <select
+                        name="type"
                         className="custom-select"
-                        defaultValue={"Individual"}
+                        onChange={handlerChange}
+                        value={form.type}
                       >
                         <option value="Individual">Individual</option>
-                        <option value="budget">Compañía</option>
+                        <option value="Compañía">Compañía</option>
                       </select>
                     </div>
                   </div>
@@ -140,6 +175,8 @@ const SectionChooseYourCoach = ({ refProp }) => {
                         type="text"
                         className="form-control"
                         name="email"
+                        onChange={handlerChange}
+                        value={form.email}
                         placeholder="Tu correo electrónico"
                       />
                     </div>
@@ -150,6 +187,8 @@ const SectionChooseYourCoach = ({ refProp }) => {
                         type="text"
                         className="form-control"
                         name="phone"
+                        onChange={handlerChange}
+                        value={form.phone}
                         placeholder="Número de teléfono"
                       />
                     </div>
@@ -160,6 +199,8 @@ const SectionChooseYourCoach = ({ refProp }) => {
                         type="text"
                         className="form-control"
                         name="subject"
+                        onChange={handlerChange}
+                        value={form.subject}
                         placeholder="Asunto"
                       />
                     </div>
@@ -172,19 +213,21 @@ const SectionChooseYourCoach = ({ refProp }) => {
                       className="form-control"
                       rows={4}
                       name="description"
+                      onChange={handlerChange}
+                      value={form.description}
                       placeholder="Hola, me gustaría ..."
                       aria-label="Hola, me gustaría ..."
-                      defaultValue={""}
                     />
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
                 <button
-                  type="button"
+                  type="submit"
+                  disabled={sendingForm}
                   className="btn btn-wide btn-radius-bottom-left btn-primary btn-md mr-2 mb-3 mb-md-0"
                 >
-                  Enviar mensaje
+                  {sendingForm ? "Enviando mensaje..." : "Enviar mensaje"}
                 </button>
                 <button
                   type="button"
@@ -192,7 +235,7 @@ const SectionChooseYourCoach = ({ refProp }) => {
                   data-dismiss="modal"
                   onClick={handleCloseModal}
                 >
-                  Close
+                  Cerrar
                 </button>
               </div>
             </form>
