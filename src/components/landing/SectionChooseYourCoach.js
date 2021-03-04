@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Formik } from "formik";
 
 const initialForm = {
   firstName: "",
@@ -11,16 +12,8 @@ const initialForm = {
 };
 
 const SectionChooseYourCoach = ({ refProp }) => {
-  const [form, setForm] = useState({ ...initialForm });
-  const [sendingForm, setSendingForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectCoach, setSelectCoach] = useState(null);
-
-  const handlerChange = (event) => {
-    const { name, value } = event.target;
-    console.log(initialForm);
-    setForm({ ...form, [name]: value });
-  };
 
   const handleOpenModal = () => {
     document.querySelector("html").style.overflowY = "hidden";
@@ -30,7 +23,6 @@ const SectionChooseYourCoach = ({ refProp }) => {
   const handleCloseModal = () => {
     document.querySelector("html").style.overflowY = "auto";
     setShowModal(false);
-    setForm({ ...initialForm });
     setSelectCoach(null);
   };
 
@@ -38,11 +30,10 @@ const SectionChooseYourCoach = ({ refProp }) => {
     return { title, image, text, post };
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSendingForm(true);
+  const handleSubmitFormik = (values, { setSubmitting }) => {
     setTimeout(() => {
-      setSendingForm(false);
+      console.log(values);
+      setSubmitting(false);
       handleCloseModal();
     }, 1000);
   };
@@ -106,139 +97,263 @@ const SectionChooseYourCoach = ({ refProp }) => {
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           {selectCoach && (
-            <form className="modal-content" onSubmit={handleSubmit}>
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  <div className="title-flex">
-                    <img
-                      src={selectCoach.image}
-                      className="avatar"
-                      alt="team"
-                      srcSet={selectCoach.image}
-                    />{" "}
-                    {selectCoach.title}
-                  </div>
-                </h5>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                  onClick={handleCloseModal}
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="row mx-gutters-2">
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="firstName"
-                        onChange={handlerChange}
-                        value={form.firstName}
-                        placeholder="Nombre"
-                        aria-label="Nombre"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="lasstName"
-                        onChange={handlerChange}
-                        value={form.lasstName}
-                        placeholder="Apellido"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <select
-                        name="type"
-                        className="custom-select"
-                        onChange={handlerChange}
-                        value={form.type}
+            <>
+              <Formik
+                initialValues={initialForm}
+                validate={(values) => {
+                  const errors = {};
+                  if (!values.email) {
+                    errors.email = "Requerido";
+                  } else if (
+                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                      values.email
+                    )
+                  ) {
+                    errors.email = "Dirección de correo electrónico inválida";
+                  }
+                  if (!values.firstName) {
+                    errors.firstName = "Requerido";
+                  }
+                  if (!values.lasstName) {
+                    errors.lasstName = "Requerido";
+                  }
+                  if (!values.type) {
+                    errors.type = "Requerido";
+                  }
+                  if (!values.phone) {
+                    errors.phone = "Requerido";
+                  } else if (!/^\d{11}$/.test(values.phone)) {
+                    errors.phone = "Número de telefónico inválido";
+                  }
+                  if (!values.description) {
+                    errors.description = "Requerido";
+                  }
+                  return errors;
+                }}
+                onSubmit={handleSubmitFormik}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                  /* and other goodies */
+                }) => (
+                  <form className="modal-content" onSubmit={handleSubmit}>
+                    <div className="modal-header">
+                      <h5 className="modal-title">
+                        <div className="title-flex">
+                          <img
+                            src={selectCoach.image}
+                            className="avatar"
+                            alt="team"
+                            srcSet={selectCoach.image}
+                          />{" "}
+                          {selectCoach.title}
+                        </div>
+                      </h5>
+                      <button
+                        type="button"
+                        className="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                        onClick={handleCloseModal}
                       >
-                        <option value="Individual">Individual</option>
-                        <option value="Compañía">Compañía</option>
-                      </select>
+                        <span aria-hidden="true">×</span>
+                      </button>
                     </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="email"
-                        onChange={handlerChange}
-                        value={form.email}
-                        placeholder="Tu correo electrónico"
-                      />
+                    <div className="modal-body">
+                      <div className="row mx-gutters-2">
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <input
+                              type="text"
+                              className={
+                                errors.firstName &&
+                                touched.firstName &&
+                                errors.firstName
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              name="firstName"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.firstName}
+                              placeholder="Nombre"
+                              aria-label="Nombre"
+                            />
+                            <div className="invalid-feedback">
+                              {errors.firstName &&
+                                touched.firstName &&
+                                errors.firstName}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <input
+                              type="text"
+                              className={
+                                errors.lasstName &&
+                                touched.lasstName &&
+                                errors.lasstName
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              name="lasstName"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.lasstName}
+                              placeholder="Apellido"
+                            />
+                            <div className="invalid-feedback">
+                              {errors.lasstName &&
+                                touched.lasstName &&
+                                errors.lasstName}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <select
+                              name="type"
+                              className={
+                                errors.type && touched.type && errors.type
+                                  ? "custom-select is-invalid"
+                                  : "custom-select"
+                              }
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.type}
+                            >
+                              <option value="Individual">Individual</option>
+                              <option value="Compañía">Compañía</option>
+                            </select>
+                            <div className="invalid-feedback">
+                              {errors.type && touched.type && errors.type}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <input
+                              type="text"
+                              className={
+                                errors.email && touched.email && errors.email
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              name="email"
+                              placeholder="Tu correo electrónico"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.email}
+                            />
+                            <div className="invalid-feedback">
+                              {errors.email && touched.email && errors.email}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <input
+                              type="text"
+                              className={
+                                errors.phone && touched.phone && errors.phone
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              name="phone"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.phone}
+                              placeholder="Número de teléfono"
+                            />
+                            <div className="invalid-feedback">
+                              {errors.phone && touched.phone && errors.phone}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="input-group">
+                            <input
+                              type="text"
+                              className={
+                                errors.subject &&
+                                touched.subject &&
+                                errors.subject
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              name="subject"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.subject}
+                              placeholder="Asunto"
+                            />
+                            <div className="invalid-feedback">
+                              {errors.subject &&
+                                touched.subject &&
+                                errors.subject}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-5">
+                        <label className="sr-only">
+                          ¿como podemos ayudarte?
+                        </label>
+                        <div className="input-group">
+                          <textarea
+                            className={
+                              errors.description &&
+                              touched.description &&
+                              errors.description
+                                ? "form-control is-invalid"
+                                : "form-control"
+                            }
+                            rows={4}
+                            name="description"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.description}
+                            placeholder="Hola, me gustaría ..."
+                            aria-label="Hola, me gustaría ..."
+                          />
+                          <div className="invalid-feedback">
+                            {errors.description &&
+                              touched.description &&
+                              errors.description}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="phone"
-                        onChange={handlerChange}
-                        value={form.phone}
-                        placeholder="Número de teléfono"
-                      />
+                    <div className="modal-footer">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="btn btn-wide btn-radius-bottom-left btn-primary btn-md mr-2 mb-3 mb-md-0"
+                      >
+                        {isSubmitting
+                          ? "Enviando mensaje..."
+                          : "Enviar mensaje"}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-radius-bottom-right btn-md mb-3 mb-md-0"
+                        data-dismiss="modal"
+                        onClick={handleCloseModal}
+                      >
+                        Cerrar
+                      </button>
                     </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="subject"
-                        onChange={handlerChange}
-                        value={form.subject}
-                        placeholder="Asunto"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mb-5">
-                  <label className="sr-only">¿como podemos ayudarte?</label>
-                  <div className="input-group">
-                    <textarea
-                      className="form-control"
-                      rows={4}
-                      name="description"
-                      onChange={handlerChange}
-                      value={form.description}
-                      placeholder="Hola, me gustaría ..."
-                      aria-label="Hola, me gustaría ..."
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="submit"
-                  disabled={sendingForm}
-                  className="btn btn-wide btn-radius-bottom-left btn-primary btn-md mr-2 mb-3 mb-md-0"
-                >
-                  {sendingForm ? "Enviando mensaje..." : "Enviar mensaje"}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-radius-bottom-right btn-md mb-3 mb-md-0"
-                  data-dismiss="modal"
-                  onClick={handleCloseModal}
-                >
-                  Cerrar
-                </button>
-              </div>
-            </form>
+                  </form>
+                )}
+              </Formik>
+            </>
           )}
         </div>
       </div>
