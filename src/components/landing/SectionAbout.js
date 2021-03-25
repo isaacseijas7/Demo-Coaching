@@ -1162,7 +1162,7 @@ const SectionAbout = ({ chooseyourcoachScroll, refProp }) => {
         <div className="row align-items-center justify-content-around spacer-one-top-lg mb-6 pb-6">
           <div className="col-lg-5 col-md-9 order-1">
             <h3 className="h1">
-              En Demo-Coaching hacemos las cosas de manera diferente
+              En Coaching hacemos las cosas de manera diferente
             </h3>
             <p className="lead">
               Nuestro trabajo con los clientes siempre ha estado en la

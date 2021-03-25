@@ -13,7 +13,7 @@ const SectionStories = ({ chooseyourcoachScroll }) => {
           <div className="col">
             <div className="mb-5 pb-5 text-center">
               <h2 className="display-4">
-                A los clientes les encanta Demo-Coaching
+                A los clientes les encanta Coaching
               </h2>
               <p className="w-md-60 mx-auto mb-0 lead">
                 Nuestro trabajo con los clientes siempre ha estado en la

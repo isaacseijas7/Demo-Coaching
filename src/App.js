@@ -6,13 +6,9 @@ function App() {
   const [contentLoaded, setContentLoaded] = useState(false);
 
   useEffect(() => {
-    window.addEventListener(
-      "load",
-      () => {
-        setContentLoaded(true);
-      },
-      false
-    );
+    setTimeout(() => {
+      setContentLoaded(true);
+    }, 1500);
   }, [contentLoaded]);
 
   return (

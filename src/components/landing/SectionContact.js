@@ -13,7 +13,7 @@ const SectionContact = ({ refProp }) => {
               </h2>
               <p className="text-white">
                 Para obtener más información sobre nuestros productos y precios,
-                no dude en para ponerse en contacto con nuestro
+                no dude en para ponerse en contacto con nuestro{" "}
                 <a className="text-info font-weight-medium" href="./">
                   Centro de ayuda.
                 </a>

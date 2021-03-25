@@ -89,7 +89,7 @@ const FormContact = () => {
             name="newsletterCheckbox"
           />
           <label className="custom-control-label" htmlFor="newsletterCheckbox">
-            <small>Reciba boletines de Demo-Coaching.</small>
+            <small>Reciba boletines de Coaching.</small>
           </label>
         </div>
       </div>

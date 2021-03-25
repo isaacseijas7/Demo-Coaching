@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 
+import logo from "./../../assets/svg/logo.svg";
+
 const Header = ({
   headerScroll,
   aboutScroll,
@@ -51,7 +53,7 @@ const Header = ({
                 headerScroll(event);
               }}
             >
-              Demo-Coaching
+              <img src={logo} alt="logo" srcSet={logo} />
             </a>
             <button
               className="navbar-toggler btn-navbar-toggler"
